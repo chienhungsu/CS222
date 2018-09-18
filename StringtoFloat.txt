@@ -1,1 +1,0 @@
-Question: Convert a “string” to float without using any libraries.Example 1.Input: convert(“123”) Output: 123 Example 2:Input: convert(“1.21”)Output: 1.21Public void convert(String s){}
