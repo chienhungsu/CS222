@@ -1,0 +1,133 @@
+Script started on Wed Apr 20 10:31:28 2016
+mason% uname -a
+SunOS mason 5.10 Generic_150400-30 sun4u sparc SUNW,Sun-Fire-V890
+mason% cat Makefile
+mandelbrot : main.o complex.o mandelbrot.o    
+        gcc -o mandelbrot main.o complex.o mandelbrot.o -lm 
+
+main.o : main.c complex.h mandelbrot.h  
+        gcc -c main.c
+
+mandelbrot.o : mandelbrot.c mandelbrot.h complex.h
+        gcc -c mandelbrot.c  
+
+complex.o : complex.c complex.h 
+        gcc -c complex.c
+mason% caat    t mandelbrot.h
+complex_t mandelbrot(int n, complex_t c);
+mason% cat mandelbrot.c
+#include "complex.h"
+#include "mandelbrot.h"
+
+complex_t mandelbrot(int n,complex_t c)
+{
+        //complex_t va = mandelbrot(n-1,c);
+        complex_t va;
+        va.real=10000.00; 
+        va.imag=10000.00;  
+        complex_t tmp;
+        complex_t s; 
+        complex_t t=abs_complex(c);
+        //draw mandelbrot set
+        if(n==0)
+        {
+                s.real=c.real;
+                s.imag=c.imag; 
+                return s;
+        }
+        else if(t.real>10000.00) 
+        {
+                return va;
+        }       
+        else
+        {
+                tmp = mandelbrot(n-1,c);
+                tmp = multiply_complex(tmp,tmp); 
+                tmp = add_complex(tmp,c); 
+                return tmp;     
+        }
+}
+
+mason% cat main.c
+#include <stdio.h>
+#include "complex.h"
+#include "mandelbrot.h"
+//starting point
+#define start -1.12
+#define start1 -2.00
+//ending point
+#define end 1.12
+#define end1 0.47
+int main()
+{
+        FILE *fp; 
+        fp=fopen("s.bin","wb");
+//declare the variables  for the  pixels 
+complex_t c;
+//c in the area from (-2.0, -1.12) to (0.47, 1.12)
+for (c.imag = start; c.imag < end; c.imag += 0.077) /* number of rows are 30 */
+{   
+        for (c.real = start1; c.real < end1; c.real += 0.06175) /*number of columns are 40*/
+        {
+                //calculate the  real  and imaginary part for c 
+        complex_t e= mandelbrot(15,c);
+        complex_t s=abs_complex(e);
+        //create  the mandelbrot  set   
+        if (s.real< 10000.00)
+        {       
+        //mandelbrot  image char
+        printf("#");
+        // print in the file
+        fprintf(fp,"#");
+        }       
+        else
+        {
+        //outside  of the mandelbrot draw will print  space  or  '-'
+        printf("-");
+        //print in the file
+        fprintf(fp,"-");
+        }
+        
+        }
+//change  of  line to draw as  two dimensional array
+printf("\n");
+fprintf(fp,"\n");
+}
+fclose(fp);
+return 0;
+} 
+mason% make
+`mandelbrot' is up to date.
+mason% mandelbrot
+-----------------------------------------
+------------------------------#----------
+-------------------------------#---------
+------------------------------##---------
+-----------------------------#####-------
+-----------------------------####--------
+-----------------------##-########-#-----
+-----------------------################--
+-----------------------################--
+----------------------#################--
+------------#--------###################-
+-------------######--##################--
+-------------###########################-
+------------###########################--
+----------############################---
+------#---############################---
+-----------############################--
+------------###########################--
+-------------######--##################--
+------------#--------###################-
+----------------------#################--
+----------------------#################--
+-----------------------################--
+-----------------------##-##########-----
+-----------------------------####--------
+-----------------------------####--------
+------------------------------##---------
+-------------------------------#---------
+------------------------------#----------
+-----------------------------#-----------
+mason% ^D
+script done on Wed Apr 20 10:32:49 2016

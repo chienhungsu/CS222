@@ -1,0 +1,20 @@
+Script started on Mon Jan 25 18:19:14 2016
+mason% uname -a
+SunOS mason 5.10 Generic_150400-30 sun4u sparc SUNW,Sun-Fire-V890
+mason% cath  hello_world.c
+//CS 222
+//Homework 1
+//File: hello_world.c
+#include <stdio.h>
+int main()
+{
+        printf("Hello world!\n");
+        printf("My name is <chienhungsu>.\n");
+        return 0;
+}
+mason% gcc -o hello_world hello_world.c
+mason% ./hello_world
+Hello world!
+My name is <chienhungsu>.
+mason% ^D
+script done on Mon Jan 25 18:20:16 2016
